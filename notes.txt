@@ -1,0 +1,12 @@
+check that the route works. Yoav function.
+If the routs are conected. if i go to the url and i press enter i will really get the function running.
+
+first of all create a json that returns that returns the title of the movie and then add more files.
+We don't have to implement css html.
+only python.
+Everything else is implemented for us.
+
+what we need to do is to connect the front and the back.
+
+
+http://
