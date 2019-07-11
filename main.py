@@ -6,11 +6,20 @@ import json
 
 # Static Routes
 
+@route('/show/7')
+def show():
+    print("dsaads")
+    sectionTemplate = "./templates/show.tpl"
+    my_data = [json.loads(utils.getJsonFromFile(id))]
+    print(my_data)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {my_data})
+
 
 @route('/browse')
 def browse_series():
     sectionTemplate = "./templates/browse.tpl"
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
+
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
 
 

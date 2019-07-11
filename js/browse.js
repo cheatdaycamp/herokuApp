@@ -45,9 +45,12 @@ Browse.loadContent = function(path, updateHistory = true, stateObj = {}){
 }
 
 Browse.loadShow = function(showid, updateHistory = true){
+  console.log("hello two")
   Browse.loadContent(`/show/${showid}`,updateHistory, {"stateType":"show", "showId":showid});
 }
 
 Browse.loadEpisode = function(showid, episodeid, updateHistory = true){
   Browse.loadContent(`/show/${showid}/episode/${episodeid}`,updateHistory, {"stateType":"episode", "showId":showid, "episodeId":episodeid});
 }
+
+object7["_embedded"]['episodes']
