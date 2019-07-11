@@ -3,8 +3,6 @@ from bottle import (get, post, redirect, request, route, run, static_file,
                     template)
 import utils
 
-# Static Routes
-
 @get("/js/<filepath:re:.*\.js>")
 def js(filepath):
     return static_file(filepath, root="./js")
@@ -22,4 +20,4 @@ def index():
     sectionTemplate = "./templates/home.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
-run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
+run(host='localhost', port=os.environ.get('PORT', 7000))
