@@ -14,7 +14,6 @@ def browse():
     obj = json.loads(data)
     print("id: " + str(obj['id']))
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
-
     my_data = [json.loads(utils.getJsonFromFile('7')), json.loads(utils.getJsonFromFile('66'))]
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
 
