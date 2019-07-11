@@ -14,6 +14,27 @@ def browse_series():
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
 
 
+@route('/show/<id>')
+def show(id):
+    sectionTemplate = "./templates/show.tpl"
+    my_data = json.loads(utils.getJsonFromFile(id))
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
+
+
+@route('/ajax/show/<id>')
+def show(id):
+    sectionTemplate = "./templates/show.tpl"
+    my_data = json.loads(utils.getJsonFromFile(id))
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
+
+
+@route('/ajax/show/<id>/episode/<episodeid>')
+def show(episodeid):
+    sectionTemplate = "./templates/episode.tpl"
+    my_data = json.loads(utils.getJsonFromFile(id))[episodeid]
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
+
+
 @route('/search')
 def index():
     sectionTemplate = "./templates/search.tpl"
