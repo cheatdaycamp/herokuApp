@@ -9,4 +9,11 @@ Everything else is implemented for us.
 what we need to do is to connect the front and the back.
 
 
-http://
+search url: should return ==>
+/show/numberofseries/episode/number
+
+
+
+dont touch tamplate, js, css
+Jinja
+
