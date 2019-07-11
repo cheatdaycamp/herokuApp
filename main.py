@@ -72,9 +72,10 @@ def search():
     episodes = my_data['_embedded']['episodes']
     print(episodes)
     for data in episodes:
+        print(data)
         if data['name'] == search_name or search_name in data['summary']:    
             return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-            query = search_name, sectionData={data})
+            query = search_name, sectionData=data, results=data)
         else:
             print("not found")
 
