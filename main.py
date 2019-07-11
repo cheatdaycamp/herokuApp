@@ -19,7 +19,6 @@ def show():
 def browse_series():
     sectionTemplate = "./templates/browse.tpl"
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
 
 
@@ -54,21 +53,34 @@ def show(id, episodeid):
 @route('/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
     print(id)
-
-    # print(id, episodeid)
-    # sectionTemplate = "./templates/episode.tpl"
-    # my_data = json.loads(utils.getJsonFromFile(id)(episodeid))
-    # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
     sectionTemplate = "./templates/episode.tpl"
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-                    sectionData=my_data)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
 
 
 @route('/search')
 def index():
     sectionTemplate = "./templates/search.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+
+
+@route('/search', method = "POST")
+def search():
+    sectionTemplate = "./templates/search_result.tpl"
+    search_name = request.forms.get("q")
+    my_data = json.loads(utils.getJsonFromFile(7))
+    episodes = my_data['_embedded']['episodes']
+    print(episodes)
+    for data in episodes:
+        if data['name'] == search_name or search_name in data['summary']:    
+            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+            query = search_name, sectionData={data})
+        else:
+            print("not found")
+
+
+
+    # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
 
 @error(404)
