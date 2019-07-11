@@ -3,17 +3,16 @@ from bottle import (get, post, redirect, request, route, run, static_file, error
 import utils
 import json
 
+
 # Static Routes
 
 
 @route('/browse')
-def browse():
+def browse_series():
     sectionTemplate = "./templates/browse.tpl"
-    # my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    # print(my_data)
-    my_data = [json.loads(utils.getJsonFromFile('7')), json.loads(utils.getJsonFromFile('66'))]
-    print(my_data)
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
+    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
+
 
 @route('/search')
 def index():
@@ -41,10 +40,12 @@ def css(filepath):
 def img(filepath):
     return static_file(filepath, root="./images")
 
+
 @route('/')
 def index():
     sectionTemplate = "./templates/home.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+
 
 run(host='localhost', port=os.environ.get('PORT', 7050))
 
