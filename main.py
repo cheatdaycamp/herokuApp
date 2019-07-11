@@ -9,12 +9,10 @@ import json
 @route('/browse')
 def browse():
     sectionTemplate = "./templates/browse.tpl"
-    with open("./data/7.json", "r") as myfile:
-        data=myfile.read()
-    obj = json.loads(data)
-    print("id: " + str(obj['id']))
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+    # my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
+    # print(my_data)
     my_data = [json.loads(utils.getJsonFromFile('7')), json.loads(utils.getJsonFromFile('66'))]
+    print(my_data)
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
 
 @route('/search')
@@ -49,3 +47,13 @@ def index():
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
 run(host='localhost', port=os.environ.get('PORT', 7050))
+
+
+
+
+
+    # with open("./data/7.json", "r") as myfile:
+    #     data=myfile.read()
+    # obj = json.loads(data)
+    # print("id: " + str(obj['id']))
+    # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
