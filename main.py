@@ -7,12 +7,10 @@ import json
 
 
 @route('/browse')
-def index():
+def browse():
     sectionTemplate = "./templates/browse.tpl"
-    mydata = json.load(json_file)
-
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {mydata})
-
+    my_data = [json.loads(utils.getJsonFromFile('7')), json.loads(utils.getJsonFromFile('66'))]
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
 
 @route('/search')
 def index():
