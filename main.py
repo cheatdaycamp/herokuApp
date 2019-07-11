@@ -9,7 +9,7 @@ import json
 @route('/browse')
 def browse():
     sectionTemplate = "./templates/browse.tpl"
-    my_data = [json.loads(utils.getJsonFromFile('7')), json.loads(utils.getJsonFromFile('66'))]
+    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
 
 @route('/search')
