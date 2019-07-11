@@ -1,6 +1,7 @@
 import os
 from bottle import (get, post, redirect, request, route, run, static_file, error, template)
 import utils
+import json
 
 # Static Routes
 
@@ -8,7 +9,9 @@ import utils
 @route('/browse')
 def index():
     sectionTemplate = "./templates/browse.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+    mydata = json.load(json_file)
+
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {mydata})
 
 
 @route('/search')
@@ -18,7 +21,7 @@ def index():
 
 
 @error(404)
-def error404(error):
+def not_found(error):
     sectionTemplate = "./templates/404.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
