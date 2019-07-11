@@ -31,15 +31,15 @@ def show(id):
 # correct thsi for the episodes
 @route('/ajax/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
-    print(id)
-    # print(id, episodeid)
+    print(episodeid)
     sectionTemplate = "./templates/episode.tpl"
-    my_data = json.loads(utils.getJsonFromFile(id)(episodeid))
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
-    sectionTemplate = "./templates/browse.tpl"
-    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-                    sectionData=my_data)
+    my_data = json.loads(utils.getJsonFromFile(id))
+    episodes = my_data['_embedded']['episodes']
+    for data in episodes:
+        print(data["id"], episodeid)
+        if data['id'] == int(episodeid):
+            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                    sectionData=data)
 
 
 @route('/show/<id>/episode/<episodeid>')
@@ -50,7 +50,7 @@ def show(id, episodeid):
     # sectionTemplate = "./templates/episode.tpl"
     # my_data = json.loads(utils.getJsonFromFile(id)(episodeid))
     # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
-    sectionTemplate = "./templates/browse.tpl"
+    sectionTemplate = "./templates/episode.tpl"
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=my_data)
