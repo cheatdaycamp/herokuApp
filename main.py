@@ -70,18 +70,12 @@ def search():
     search_name = request.forms.get("q")
     my_data = json.loads(utils.getJsonFromFile(7))
     episodes = my_data['_embedded']['episodes']
-    print(episodes)
     for data in episodes:
-        print(data)
-        if data['name'] == search_name or search_name in data['summary']:    
+        print(search_name in data['summary'])  
+        if data['name'] == search_name or search_name in data['summary']:      
             return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
             query = search_name, sectionData=data, results=data)
-        else:
-            print("not found")
 
-
-
-    # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
 
 @error(404)
