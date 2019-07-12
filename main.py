@@ -4,6 +4,17 @@ import utils
 import json
 
 
+# Static Routes
+
+@route('/show/7')
+def show():
+    print("dsaads")
+    sectionTemplate = "./templates/show.tpl"
+    my_data = [json.loads(utils.getJsonFromFile(id))]
+    print(my_data)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {my_data})
+
+
 @route('/browse')
 def browse_series():
     sectionTemplate = "./templates/browse.tpl"
@@ -25,12 +36,15 @@ def show(id):
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
 
 
+# correct thsi for the episodes
 @route('/ajax/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
+    print(episodeid)
     sectionTemplate = "./templates/episode.tpl"
     my_data = json.loads(utils.getJsonFromFile(id))
     episodes = my_data['_embedded']['episodes']
     for data in episodes:
+        print(data["id"], episodeid)
         if data['id'] == int(episodeid):
             return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=data)
@@ -38,6 +52,7 @@ def show(id, episodeid):
 
 @route('/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
+    print(id)
     sectionTemplate = "./templates/episode.tpl"
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
@@ -53,18 +68,27 @@ def index():
 def search():
     sectionTemplate = "./templates/search_result.tpl"
     search_name = request.forms.get("q")
-    print(search_name)
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    episodes = my_data['_embedded']['episodes']
-    print(episodes)
-    for data in episodes:
-        if data['name'] == search_name or search_name in data['summary']:    
-            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-            query = search_name, sectionData={data})
-        else:
-            print("not found")
-
-
+    episodes = []
+    for episode in my_data[len(my_data)-1]['_embedded']['episodes']:
+        episodes.append(episode)
+        for data in episodes:
+            print(search_name in data['summary'])  
+            myresult = [] 
+            if data['name'] == search_name or search_name in data['summary']: 
+                newObj = {
+                    # "showid": 'my_data["id"]',
+                    # "episodeid": 'data["id"]',
+                    # "text": "data['summary']"
+                }
+                print(my_data['id'])
+                newObj['showid'] = my_data['id']
+                newObj['episodeid'] = data['id']
+                newObj['text'] = my_data['summary']
+                myresult.append(newObj)  
+                print(myresult)    
+                return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                query = search_name, sectionData=myresult, results=myresult)
 
 
 
