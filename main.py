@@ -4,13 +4,6 @@ import utils
 import json
 
 
-@route('/show/7')
-def show():
-    sectionTemplate = "./templates/show.tpl"
-    my_data = [json.loads(utils.getJsonFromFile(id))]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {my_data})
-
-
 @route('/browse')
 def browse_series():
     sectionTemplate = "./templates/browse.tpl"
