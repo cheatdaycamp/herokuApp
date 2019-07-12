@@ -8,10 +8,8 @@ import json
 
 @route('/show/7')
 def show():
-    print("dsaads")
     sectionTemplate = "./templates/show.tpl"
     my_data = [json.loads(utils.getJsonFromFile(id))]
-    print(my_data)
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {my_data})
 
 
@@ -39,12 +37,10 @@ def show(id):
 # correct thsi for the episodes
 @route('/ajax/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
-    print(episodeid)
     sectionTemplate = "./templates/episode.tpl"
     my_data = json.loads(utils.getJsonFromFile(id))
     episodes = my_data['_embedded']['episodes']
     for data in episodes:
-        print(data["id"], episodeid)
         if data['id'] == int(episodeid):
             return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=data)
@@ -52,7 +48,6 @@ def show(id, episodeid):
 
 @route('/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
-    print(id)
     sectionTemplate = "./templates/episode.tpl"
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
@@ -67,28 +62,22 @@ def index():
 @route('/search', method = "POST")
 def search():
     sectionTemplate = "./templates/search_result.tpl"
-    search_name = request.forms.get("q")
+    query = request.forms.get("q")
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     episodes = []
-    for episode in my_data[len(my_data)-1]['_embedded']['episodes']:
-        episodes.append(episode)
-        for data in episodes:
-            print(search_name in data['summary'])  
-            myresult = [] 
-            if data['name'] == search_name or search_name in data['summary']: 
+    for x in range(len(my_data)-1):
+        for i in range(len(my_data[x]['_embedded']['episodes'])-1):
+            my_show = my_data[x]
+            if query in str(my_show['name']) or query in str(my_show['_embedded']['episodes'][i]['name']) or query in str(my_show['_embedded']['episodes'][i]['summary']):     
                 newObj = {
-                    # "showid": 'my_data["id"]',
-                    # "episodeid": 'data["id"]',
-                    # "text": "data['summary']"
+                    "showid": my_data[x]["id"],
+                    "episodeid": my_data[x]['_embedded']['episodes'][i]["id"],
+                    "text": my_data[x]['_embedded']['episodes'][i]['name']
                 }
-                print(my_data['id'])
-                newObj['showid'] = my_data['id']
-                newObj['episodeid'] = data['id']
-                newObj['text'] = my_data['summary']
-                myresult.append(newObj)  
-                print(myresult)    
-                return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-                query = search_name, sectionData=myresult, results=myresult)
+                episodes.append(newObj)
+    myData = episodes  
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, order='',
+    query = query, sectionData=myData, results=myData)
 
 
 
