@@ -68,13 +68,27 @@ def index():
 def search():
     sectionTemplate = "./templates/search_result.tpl"
     search_name = request.forms.get("q")
-    my_data = json.loads(utils.getJsonFromFile(7))
-    episodes = my_data['_embedded']['episodes']
-    for data in episodes:
-        print(search_name in data['summary'])  
-        if data['name'] == search_name or search_name in data['summary']:      
-            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-            query = search_name, sectionData=data, results=data)
+    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
+    episodes = []
+    for episode in my_data[len(my_data)-1]['_embedded']['episodes']:
+        episodes.append(episode)
+        for data in episodes:
+            print(search_name in data['summary'])  
+            myresult = [] 
+            if data['name'] == search_name or search_name in data['summary']: 
+                newObj = {
+                    # "showid": 'my_data["id"]',
+                    # "episodeid": 'data["id"]',
+                    # "text": "data['summary']"
+                }
+                print(my_data['id'])
+                newObj['showid'] = my_data['id']
+                newObj['episodeid'] = data['id']
+                newObj['text'] = my_data['summary']
+                myresult.append(newObj)  
+                print(myresult)    
+                return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                query = search_name, sectionData=myresult, results=myresult)
 
 
 
@@ -106,13 +120,3 @@ def index():
 
 
 run(host='localhost', port=os.environ.get('PORT', 7050))
-
-
-
-
-
-    # with open("./data/7.json", "r") as myfile:
-    #     data=myfile.read()
-    # obj = json.loads(data)
-    # print("id: " + str(obj['id']))
-    # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
