@@ -65,7 +65,7 @@ def search():
                 }
                 episodes.append(newObj)
     myData = episodes  
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, order='',
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
     query = query, sectionData=myData, results=myData)
 
 
