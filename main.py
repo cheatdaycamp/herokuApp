@@ -4,17 +4,6 @@ import utils
 import json
 
 
-# Static Routes
-
-@route('/show/7')
-def show():
-    print("dsaads")
-    sectionTemplate = "./templates/show.tpl"
-    my_data = [json.loads(utils.getJsonFromFile(id))]
-    print(my_data)
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {my_data})
-
-
 @route('/browse')
 def browse_series():
     sectionTemplate = "./templates/browse.tpl"
@@ -36,15 +25,12 @@ def show(id):
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
 
 
-# correct thsi for the episodes
 @route('/ajax/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
-    print(episodeid)
     sectionTemplate = "./templates/episode.tpl"
     my_data = json.loads(utils.getJsonFromFile(id))
     episodes = my_data['_embedded']['episodes']
     for data in episodes:
-        print(data["id"], episodeid)
         if data['id'] == int(episodeid):
             return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
                     sectionData=data)
@@ -52,7 +38,6 @@ def show(id, episodeid):
 
 @route('/show/<id>/episode/<episodeid>')
 def show(id, episodeid):
-    print(id)
     sectionTemplate = "./templates/episode.tpl"
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
@@ -68,7 +53,8 @@ def index():
 def search():
     sectionTemplate = "./templates/search_result.tpl"
     search_name = request.forms.get("q")
-    my_data = json.loads(utils.getJsonFromFile(7))
+    print(search_name)
+    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     episodes = my_data['_embedded']['episodes']
     print(episodes)
     for data in episodes:
@@ -80,7 +66,6 @@ def search():
 
 
 
-    # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
 
 @error(404)
@@ -111,13 +96,3 @@ def index():
 
 
 run(host='localhost', port=os.environ.get('PORT', 7050))
-
-
-
-
-
-    # with open("./data/7.json", "r") as myfile:
-    #     data=myfile.read()
-    # obj = json.loads(data)
-    # print("id: " + str(obj['id']))
-    # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
