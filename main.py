@@ -6,38 +6,38 @@ from collections import OrderedDict
 
 @route('/browse')
 def browse():
-    sectionTemplate = "./templates/browse.tpl"
+    section_template = "./templates/browse.tpl"
     series = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=series)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData=series)
 
 
 @route('/show/<id_show>')
 def show(id_show):
     if id_show not in utils.AVAILABE_SHOWS:
-        sectionTemplate = "./templates/404.tpl"
+        section_template = "./templates/404.tpl"
         show = {}
     else:
-        sectionTemplate = "./templates/show.tpl"
+        section_template = "./templates/show.tpl"
         show = json.loads(utils.getJsonFromFile(id_show))
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = show)
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData = show)
 
 
 @route('/ajax/show/<id_show>')
 def show_ajax(id_show):
-    sectionTemplate = "./templates/show.tpl"
+    section_template = "./templates/show.tpl"
     show = json.loads(utils.getJsonFromFile(id_show))
-    return template(sectionTemplate, result=show)
+    return template(section_template, result=show)
 
 
 @route('/ajax/show/<id_show>/episode/<id_episode>')
 def episode_ajax(id_show, id_episode):
-    sectionTemplate = "./templates/episode.tpl"
+    section_template = "./templates/episode.tpl"
     show = json.loads(utils.getJsonFromFile(id_show))
     episodes = show['_embedded']['episodes']
     parsed_id_episode = int(id_episode)
     for chapter in episodes:
         if chapter['id'] == parsed_id_episode:
-            return template(sectionTemplate, result=chapter)
+            return template(section_template, result=chapter)
     # except FileNotFoundError:
     #     print('caca')
     #     sectionTemplate = "./templates/404.tpl"
@@ -45,32 +45,31 @@ def episode_ajax(id_show, id_episode):
     #                         sectionData={})
     #     #
         # print('cucu')
-        # sectionTemplate = "./templates/404.tpl"
-        # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-        #                 sectionData={})
 
 
 @route('/show/<id_show>/episode/<id_episode>')
 def episodes(id_show, id_episode):
-    sectionTemplate = "./templates/episode.tpl"
+    section_template = "./templates/episode.tpl"
     show = json.loads(utils.getJsonFromFile(id_show))
     episodes = show['_embedded']['episodes']
     parsed_id_episode = int(id_episode)
     for chapter in episodes:
         if chapter['id'] == parsed_id_episode:
-            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
                             sectionData=chapter)
+    section_template = "./templates/404.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData={})
 
 
 @route('/search')
 def search():
-    sectionTemplate = "./templates/search.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+    section_template = "./templates/search.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData = {})
 
 
 @route('/search', method = "POST")
 def search_post():
-    sectionTemplate = "./templates/search_result.tpl"
+    section_template = "./templates/search_result.tpl"
     query = request.forms.get("q")
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     episodes = []
@@ -89,17 +88,16 @@ def search_post():
     for x in range(len(episodes)-1):
         print(episodes[x])
     newlist = sorted(episodes, key=lambda k: k['rating'])
-
     myData = newlist  
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
     query = query, sectionData=myData, results=myData)
 
 
 
 @error(404)
 def not_found(error):
-    sectionTemplate = "./templates/404.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+    section_template = "./templates/404.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData = {})
 
 
 @get("/js/<filepath:re:.*\.js>")
@@ -119,8 +117,8 @@ def img(filepath):
 
 @route('/')
 def index():
-    sectionTemplate = "./templates/home.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+    section_template = "./templates/home.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData = {})
 
 
 run(host='localhost', port=os.environ.get('PORT', 7050))
