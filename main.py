@@ -13,8 +13,12 @@ def browse():
 
 @route('/show/<id_show>')
 def show(id_show):
-    sectionTemplate = "./templates/show.tpl"
-    show = json.loads(utils.getJsonFromFile(id_show))
+    if id_show not in utils.AVAILABE_SHOWS:
+        sectionTemplate = "./templates/404.tpl"
+        show = {}
+    else:
+        sectionTemplate = "./templates/show.tpl"
+        show = json.loads(utils.getJsonFromFile(id_show))
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = show)
 
 
@@ -30,16 +34,32 @@ def episode_ajax(id_show, id_episode):
     sectionTemplate = "./templates/episode.tpl"
     show = json.loads(utils.getJsonFromFile(id_show))
     episodes = show['_embedded']['episodes']
+    parsed_id_episode = int(id_episode)
     for chapter in episodes:
-        if chapter['id'] == int(id_episode):
+        if chapter['id'] == parsed_id_episode:
             return template(sectionTemplate, result=chapter)
+    # except FileNotFoundError:
+    #     print('caca')
+    #     sectionTemplate = "./templates/404.tpl"
+    #     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+    #                         sectionData={})
+    #     #
+        # print('cucu')
+        # sectionTemplate = "./templates/404.tpl"
+        # return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+        #                 sectionData={})
 
 
 @route('/show/<id_show>/episode/<id_episode>')
-def show(id_show, id_episode):
+def episodes(id_show, id_episode):
     sectionTemplate = "./templates/episode.tpl"
-    episode = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=episode)
+    show = json.loads(utils.getJsonFromFile(id_show))
+    episodes = show['_embedded']['episodes']
+    parsed_id_episode = int(id_episode)
+    for chapter in episodes:
+        if chapter['id'] == parsed_id_episode:
+            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
+                            sectionData=chapter)
 
 
 @route('/search')
@@ -56,6 +76,7 @@ def search_post():
     episodes = []
     for x in range(len(my_data)-1):
         for i in range(len(my_data[x]['_embedded']['episodes'])-1):
+            print(i)
             my_show = my_data[x]
             if query in str(my_show['name']) or query in str(my_show['_embedded']['episodes'][i]['name']) or query in str(my_show['_embedded']['episodes'][i]['summary']):     
                 newObj = {
