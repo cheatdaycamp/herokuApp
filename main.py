@@ -38,13 +38,6 @@ def episode_ajax(id_show, id_episode):
     for chapter in episodes:
         if chapter['id'] == parsed_id_episode:
             return template(section_template, result=chapter)
-    # except FileNotFoundError:
-    #     print('caca')
-    #     sectionTemplate = "./templates/404.tpl"
-    #     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
-    #                         sectionData={})
-    #     #
-        # print('cucu')
 
 
 @route('/show/<id_show>/episode/<id_episode>')
@@ -52,11 +45,15 @@ def episodes(id_show, id_episode):
     section_template = "./templates/episode.tpl"
     show = json.loads(utils.getJsonFromFile(id_show))
     episodes = show['_embedded']['episodes']
-    parsed_id_episode = int(id_episode)
-    for chapter in episodes:
-        if chapter['id'] == parsed_id_episode:
-            return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
-                            sectionData=chapter)
+    try:
+        parsed_id_episode = int(id_episode)
+        for chapter in episodes:
+            if chapter['id'] == parsed_id_episode:
+                return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
+                                sectionData=chapter)
+    except ValueError:
+        section_template = "./templates/404.tpl"
+        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData={})
     section_template = "./templates/404.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData={})
 
