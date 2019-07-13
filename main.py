@@ -3,12 +3,20 @@ from bottle import (get, post, redirect, request, route, run, static_file, error
 import utils
 import json
 from collections import OrderedDict
+from operator import itemgetter
 
 @route('/browse')
 def browse():
-    section_template = "./templates/browse.tpl"
+    order_chosen = 'rating'
     series = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData=series)
+    if order_chosen == 'name':
+        series_sorted = sorted(series, key=itemgetter('name'), reverse=False)
+    elif order_chosen == 'rating':
+        series_sorted = sorted(series, key=lambda x: float(x['rating']['average']), reverse=True)
+    else:
+        series_sorted = sorted(series, key=itemgetter(order_chosen), reverse=False)
+    section_template = "./templates/browse.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData=series_sorted)
 
 
 @route('/show/<id_show>')
