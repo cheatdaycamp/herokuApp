@@ -43,13 +43,13 @@ def show(id_show, id_episode):
 
 
 @route('/search')
-def index():
+def search():
     sectionTemplate = "./templates/search.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
 
 
 @route('/search', method = "POST")
-def search():
+def search_post():
     sectionTemplate = "./templates/search_result.tpl"
     query = request.forms.get("q")
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
