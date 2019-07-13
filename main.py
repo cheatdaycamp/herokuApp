@@ -2,7 +2,7 @@ import os
 from bottle import (get, post, redirect, request, route, run, static_file, error, template)
 import utils
 import json
-
+from collections import OrderedDict
 
 @route('/browse')
 def browse_series():
@@ -61,10 +61,15 @@ def search():
                 newObj = {
                     "showid": my_data[x]["id"],
                     "episodeid": my_data[x]['_embedded']['episodes'][i]["id"],
-                    "text": my_data[x]['_embedded']['episodes'][i]['name']
+                    "text": my_data[x]['name'] + ": " + my_data[x]['_embedded']['episodes'][i]['name'],
+                    'rating': my_data[x]['rating']['average'],
                 }
                 episodes.append(newObj)
-    myData = episodes  
+    for x in range(len(episodes)-1):
+        print(episodes[x])
+    newlist = sorted(episodes, key=lambda k: k['rating'])
+
+    myData = newlist  
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate,
     query = query, sectionData=myData, results=myData)
 
