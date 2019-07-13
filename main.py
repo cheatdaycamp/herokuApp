@@ -42,18 +42,21 @@ def episode_ajax(id_show, id_episode):
 
 @route('/show/<id_show>/episode/<id_episode>')
 def episodes(id_show, id_episode):
-    section_template = "./templates/episode.tpl"
+    if id_show not in utils.AVAILABE_SHOWS:
+        section_template = "./templates/404.tpl"
+        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
+                        sectionData={})
     show = json.loads(utils.getJsonFromFile(id_show))
     episodes = show['_embedded']['episodes']
     try:
         parsed_id_episode = int(id_episode)
         for chapter in episodes:
             if chapter['id'] == parsed_id_episode:
+                section_template = "./templates/episode.tpl"
                 return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
                                 sectionData=chapter)
     except ValueError:
-        section_template = "./templates/404.tpl"
-        return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData={})
+        pass
     section_template = "./templates/404.tpl"
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData={})
 
