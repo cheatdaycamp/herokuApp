@@ -21,7 +21,6 @@ window.onpopstate = function(event) {
           break;
       }
     }else{
-      console.log("what?", event)
     }
   }
 }
@@ -45,7 +44,6 @@ Browse.loadContent = function(path, updateHistory = true, stateObj = {}){
 }
 
 Browse.loadShow = function(showid, updateHistory = true){
-  console.log("hello two")
   Browse.loadContent(`/show/${showid}`,updateHistory, {"stateType":"show", "showId":showid});
 }
 
