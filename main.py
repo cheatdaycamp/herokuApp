@@ -5,41 +5,41 @@ import json
 from collections import OrderedDict
 
 @route('/browse')
-def browse_series():
+def browse():
     sectionTemplate = "./templates/browse.tpl"
-    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
+    series = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=series)
 
 
-@route('/show/<id>')
-def show(id):
+@route('/show/<id_show>')
+def show(id_show):
     sectionTemplate = "./templates/show.tpl"
-    my_data = json.loads(utils.getJsonFromFile(id))
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = my_data)
+    show = json.loads(utils.getJsonFromFile(id_show))
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = show)
 
 
-@route('/ajax/show/<id>')
-def show_ajax(id):
+@route('/ajax/show/<id_show>')
+def show_ajax(id_show):
     sectionTemplate = "./templates/show.tpl"
-    my_data = json.loads(utils.getJsonFromFile(id))
-    return template(sectionTemplate, result=my_data)
+    show = json.loads(utils.getJsonFromFile(id_show))
+    return template(sectionTemplate, result=show)
 
 
-@route('/ajax/show/<id>/episode/<episodeid>')
-def episode_ajax(id, episodeid):
+@route('/ajax/show/<id_show>/episode/<id_episode>')
+def episode_ajax(id_show, id_episode):
     sectionTemplate = "./templates/episode.tpl"
-    my_data = json.loads(utils.getJsonFromFile(id))
-    episodes = my_data['_embedded']['episodes']
-    for data in episodes:
-        if data['id'] == int(episodeid):
-            return template(sectionTemplate, result=data)
+    show = json.loads(utils.getJsonFromFile(id_show))
+    episodes = show['_embedded']['episodes']
+    for chapter in episodes:
+        if chapter['id'] == int(id_episode):
+            return template(sectionTemplate, result=chapter)
 
 
-@route('/show/<id>/episode/<episodeid>')
-def show(id, episodeid):
+@route('/show/<id_show>/episode/<id_episode>')
+def show(id_show, id_episode):
     sectionTemplate = "./templates/episode.tpl"
-    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=my_data)
+    episode = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData=episode)
 
 
 @route('/search')
