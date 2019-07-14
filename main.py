@@ -4,6 +4,12 @@ import utils
 import json
 from collections import OrderedDict
 from operator import itemgetter
+from sys import argv
+
+
+DEBUG = os.environ.get("DEBUG")
+bottle.debug(False)
+
 
 @route('/browse')
 def browse():
@@ -72,7 +78,7 @@ def episodes(id_show, id_episode):
 @route('/search')
 def search():
     section_template = "./templates/search.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData = {})
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData={})
 
 
 @route('/search', method = "POST")
@@ -127,4 +133,8 @@ def index():
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template, sectionData = {})
 
 
-run(host='localhost', port=os.environ.get('PORT', 7050))
+if DEBUG:
+	bottle.run(host='localhost', port=7000)
+else:
+	bottle.run(host='0.0.0.0', port=argv[1])
+
