@@ -12,7 +12,7 @@ def browse():
     if order_chosen == 'name':
         series_sorted = sorted(series, key=itemgetter('name'), reverse=False)
     elif order_chosen == 'rating':
-        series_sorted = sorted(series, key=lambda x: float(x['rating']['average']), reverse=True)
+        series_sorted = sorted(series, key=lambda show: float(show['rating']['average']), reverse=True)
     else:
         series_sorted = sorted(series, key=itemgetter(order_chosen), reverse=False)
     section_template = "./templates/browse.tpl"
@@ -81,22 +81,21 @@ def search_post():
     query = request.forms.get("q")
     my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     episodes = []
-    for x in range(len(my_data)-1):
-        for i in range(len(my_data[x]['_embedded']['episodes'])-1):
-            print(i)
-            my_show = my_data[x]
-            if query in str(my_show['name']) or query in str(my_show['_embedded']['episodes'][i]['name']) or query in str(my_show['_embedded']['episodes'][i]['summary']):     
+    for show in range(len(my_data)-1):
+        for episode in range(len(my_data[show]['_embedded']['episodes'])-1):
+            my_show = my_data[show]
+            if query in str(my_show['name']) or query in str(my_show['_embedded']['episodes'][episode]['name']) or query in str(my_show['_embedded']['episodes'][episode]['summary']):
                 newObj = {
-                    "showid": my_data[x]["id"],
-                    "episodeid": my_data[x]['_embedded']['episodes'][i]["id"],
-                    "text": my_data[x]['name'] + ": " + my_data[x]['_embedded']['episodes'][i]['name'],
-                    'rating': my_data[x]['rating']['average'],
+                    "showid": my_data[show]["id"],
+                    "episodeid": my_data[show]['_embedded']['episodes'][episode]["id"],
+                    "text": my_data[show]['name'] + ": " + my_data[show]['_embedded']['episodes'][episode]['name'],
+                    'rating': my_data[show]['rating']['average'],
                 }
                 episodes.append(newObj)
-    for x in range(len(episodes)-1):
-        print(episodes[x])
-    newlist = sorted(episodes, key=lambda k: k['rating'])
-    myData = newlist  
+    for show in range(len(episodes)-1):
+        print(episodes[show])
+    sorted_results = sorted(episodes, key=lambda sortby: sortby['rating'])
+    myData = sorted_results
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
     query = query, sectionData=myData, results=myData)
 
