@@ -101,7 +101,6 @@ def search_post():
     query = query, sectionData=myData, results=myData)
 
 
-
 @error(404)
 def not_found(error):
     section_template = "./templates/404.tpl"
