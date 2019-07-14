@@ -79,25 +79,25 @@ def search():
 def search_post():
     section_template = "./templates/search_result.tpl"
     query = request.forms.get("q")
-    my_data = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
+    search_results = [json.loads(utils.getJsonFromFile(series)) for series in utils.AVAILABE_SHOWS]
     episodes = []
-    for show in range(len(my_data)-1):
-        for episode in range(len(my_data[show]['_embedded']['episodes'])-1):
-            my_show = my_data[show]
+    for show in range(len(search_results)-1):
+        for episode in range(len(search_results[show]['_embedded']['episodes'])-1):
+            my_show = search_results[show]
             if query in str(my_show['name']) or query in str(my_show['_embedded']['episodes'][episode]['name']) or query in str(my_show['_embedded']['episodes'][episode]['summary']):
                 newObj = {
-                    "showid": my_data[show]["id"],
-                    "episodeid": my_data[show]['_embedded']['episodes'][episode]["id"],
-                    "text": my_data[show]['name'] + ": " + my_data[show]['_embedded']['episodes'][episode]['name'],
-                    'rating': my_data[show]['rating']['average'],
+                    "showid": search_results[show]["id"],
+                    "episodeid": search_results[show]['_embedded']['episodes'][episode]["id"],
+                    "text": search_results[show]['name'] + ": " + search_results[show]['_embedded']['episodes'][episode]['name'],
+                    'rating': search_results[show]['rating']['average'],
                 }
                 episodes.append(newObj)
     for show in range(len(episodes)-1):
         print(episodes[show])
     sorted_results = sorted(episodes, key=lambda sortby: sortby['rating'])
-    myData = sorted_results
+    results = sorted_results
     return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=section_template,
-    query = query, sectionData=myData, results=myData)
+    query = query, sectionData=results, results=results)
 
 
 @error(404)
